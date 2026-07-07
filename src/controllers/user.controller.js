@@ -104,7 +104,17 @@ const loginUser=asynchandler(async (req,res)=>{
     const valid=await user.isPasswordCorrect(password);
     if(!valid) throw new ApiError(401,"Password is Invalid");
     //do not log user in if email is not verified
-    if(!user.isVerified) throw new ApiError(401,"User email is not verified")
+    if(!user.isVerified) {
+        const code=Math.floor(100000+Math.random()*900000).toString();
+        const expiry = new Date(Date.now() + VERIFICATION_CODE_EXPIRY_MS);
+        user.verificationCode=code;
+        user.verificationCodeExpiry=expiry;
+        await user.save({validateBeforeSave:false});
+        await sendVerificationCode(user.email,code);
+        return res.status(200).json(
+            new ApiResponse(200,{user},"User not verified yet. Verification mail has been sent.")
+        )
+    }
     //generate access and refresh token
     const {accessToken,refreshToken}=await getAccessAndRefreshTokens(user._id,user);
     const loggedInUser=await User.findById(user._id)
