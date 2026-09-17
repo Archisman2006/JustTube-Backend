@@ -10,7 +10,7 @@ export const VerifyJWT=asynchandler(async (req,res,next)=>{
         throw new ApiError(401,"UnAuthorised Error");
     }
     const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-    const user= await User.findById(decodedToken).select("-password -RefreshToken")
+    const user= await User.findById(decodedToken._id).select("-password -refreshToken")
     if(!user){
         throw new ApiError(401,"Invalid Access Token");
     }
@@ -29,7 +29,7 @@ export const OptionalVerifyJWT=asynchandler(async (req,res,next)=>{
         req.user=null; return next();
     }
     const decodedToken=jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-    const user= await User.findById(decodedToken).select("-password -RefreshToken")
+    const user= await User.findById(decodedToken._id).select("-password -refreshToken")
     req.user=user;
     next();
     } catch (error) {
