@@ -129,7 +129,9 @@ const loginUser=asynchandler(async (req,res)=>{
         new ApiResponse(
             200,
             {
-                user:loggedInUser
+                user:loggedInUser,
+                accessToken,
+                refreshToken
             },
             "User logged in Successfully"
         )
@@ -245,7 +247,7 @@ const googleLogin=asynchandler(async (req,res)=>{
         .json(
             new ApiResponse(
                 200,
-                { user: loggedInUser },
+                { user: loggedInUser, accessToken, refreshToken },
                 "User logged in successfully"
             )
         );
@@ -322,7 +324,7 @@ const googleRegister=asynchandler(async (req,res)=>{
         .json(
             new ApiResponse(
                 201,
-                { user: createdUser },
+                { user: createdUser, accessToken, refreshToken },
                 "Google registration completed successfully"
             )
         );
