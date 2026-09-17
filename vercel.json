@@ -1,15 +1,21 @@
 {
     "version": 2,
     "builds": [
-    {
-        "src": "src/index.js",
-        "use": "@vercel/node"
-    }
+        {
+            "src": "src/index.js",
+            "use": "@vercel/node"
+        }
     ],
     "routes": [
-    {
-        "src": "/(.*)",
-        "dest": "src/index.js"
-    }
+        {
+            "src": "/(.*)",
+            "dest": "src/index.js"
+        }
+    ],
+    "crons": [
+        {
+            "path": "/api/cron/prune-comments",
+            "schedule": "0 3 * * *"
+        }
     ]
 }
